@@ -17,30 +17,30 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        var handle = Auth.auth().addStateDidChangeListener { (auth,user) in
-            print(user!.email)
-        }
+//        var handle = Auth.auth().addStateDidChangeListener { (auth,user) in
+//            print(user!.email)
+//        }
         
     }
-
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    
-    @IBAction func loginButtonPress(_ sender: Any) {
-        
-        // todo: check optionals
-        
-        Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!, completion: { (result, error) -> Void in
-              if (error == nil) {
-                      print("Account created :)")
-              }
-
-              else{
-                      print(error)
-              }
-          })
-        
-    }
+//
+//    @IBOutlet weak var emailTextField: UITextField!
+//    @IBOutlet weak var passwordTextField: UITextField!
+//
+//    @IBAction func loginButtonPress(_ sender: Any) {
+//
+//        // todo: check optionals
+//
+//        Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!, completion: { (result, error) -> Void in
+//              if (error == nil) {
+//                      print("Account created :)")
+//              }
+//
+//              else{
+//                      print(error)
+//              }
+//          })
+//
+//    }
 
 }
 

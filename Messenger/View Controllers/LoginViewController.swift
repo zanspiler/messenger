@@ -7,7 +7,35 @@
 //
 
 import UIKit
+import Firebase
 
-class LoginViewController: NSObject {
+class LoginViewController: UIViewController {
+
+    @IBOutlet weak var emailTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var errorLabel: UILabel!
+    @IBOutlet weak var loginButton: UIButton!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+
+    @IBAction func loginButtonPress(_ sender: Any) {
+        Auth.auth().signIn(withEmail: emailTextField.text!, password: passwordTextField.text!) { (result, error) in
+            if error == nil {
+                //transition
+                let home = self.storyboard?.instantiateViewController(identifier: "home") as? HomeViewController
+                self.view.window?.rootViewController = home
+                self.view.window?.makeKeyAndVisible()
+                
+            }
+            else {
+                print(error!)
+            }
+        }
+        
+    }
+
 
 }
