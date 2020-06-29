@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="EUQ-eM-dbC">
-                                <rect key="frame" x="50" y="244" width="314" height="309.5"/>
+                                <rect key="frame" x="50" y="244" width="314" height="306"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Register" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SEH-sq-iQe">
                                         <rect key="frame" x="0.0" y="0.0" width="314" height="26"/>
@@ -40,13 +40,13 @@
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="error msg label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aSJ-Ng-gx4" userLabel="Error Label">
-                                        <rect key="frame" x="0.0" y="228" width="314" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
+                                        <rect key="frame" x="0.0" y="228" width="314" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p60-PP-PnX" userLabel="Register Button">
-                                        <rect key="frame" x="0.0" y="273.5" width="314" height="36"/>
+                                        <rect key="frame" x="0.0" y="270" width="314" height="36"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                         <state key="normal" title="Create account"/>
                                         <connections>
@@ -67,11 +67,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="9TS-zg-RS4"/>
                     <connections>
-                        <outlet property="emailTextField" destination="zcR-rp-zTh" id="6tf-Bu-wcu"/>
+                        <outlet property="emailField" destination="zcR-rp-zTh" id="6tf-Bu-wcu"/>
                         <outlet property="errorLabel" destination="aSJ-Ng-gx4" id="ZbF-Pi-zYa"/>
-                        <outlet property="passwordTextField" destination="VJ8-F3-vKn" id="vuf-bW-Bfn"/>
+                        <outlet property="passwordField" destination="VJ8-F3-vKn" id="vuf-bW-Bfn"/>
                         <outlet property="registerButton" destination="p60-PP-PnX" id="4ZN-3p-rM8"/>
-                        <outlet property="usernameTextField" destination="rW3-F8-Hw7" id="RK3-Hh-Ldf"/>
+                        <outlet property="usernameField" destination="rW3-F8-Hw7" id="RK3-Hh-Ldf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -124,7 +124,7 @@
                                     </tableView>
                                 </subviews>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m2D-sa-YDV" userLabel="Friend Name Label">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m2D-sa-YDV" userLabel="Contact Name Label">
                                 <rect key="frame" x="186" y="20" width="42" height="80"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -151,8 +151,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="uJ4-0R-fzj"/>
                     <connections>
-                        <outlet property="friendNameLabel" destination="m2D-sa-YDV" id="Uig-2Q-KkA"/>
-                        <outlet property="messageTextField" destination="m2v-Gd-fIF" id="L2L-aS-mJy"/>
+                        <outlet property="contactNameLabel" destination="m2D-sa-YDV" id="Uig-2Q-KkA"/>
+                        <outlet property="messageField" destination="m2v-Gd-fIF" id="L2L-aS-mJy"/>
                         <outlet property="sendButton" destination="pUn-mA-zbE" id="6dE-eQ-OFn"/>
                         <outlet property="tableView" destination="ynl-zD-kMK" id="HX2-Hv-T4I"/>
                     </connections>
@@ -178,15 +178,15 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XjS-cW-kjC">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XjS-cW-kjC">
                                         <rect key="frame" x="0.0" y="46" width="394" height="732"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="BwD-5C-BpG" userLabel="cell">
-                                                <rect key="frame" x="0.0" y="28" width="394" height="43.5"/>
+                                                <rect key="frame" x="0.0" y="28" width="394" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BwD-5C-BpG" id="bQd-Ae-pDH" userLabel="Hello">
-                                                    <rect key="frame" x="0.0" y="0.0" width="394" height="43.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="394" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableViewCellContentView>
                                             </tableViewCell>
@@ -222,23 +222,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="ZWf-B5-bLs">
-                                <rect key="frame" x="159" y="244" width="96" height="136"/>
+                                <rect key="frame" x="159" y="244" width="96.5" height="136"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="APP NAME" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X28-hq-OlG">
-                                        <rect key="frame" x="0.0" y="0.0" width="96" height="26"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Messenger" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X28-hq-OlG">
+                                        <rect key="frame" x="0.0" y="0.0" width="96.5" height="26"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="19"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0OA-aX-umb">
-                                        <rect key="frame" x="0.0" y="51" width="96" height="30"/>
+                                        <rect key="frame" x="0.0" y="51" width="96.5" height="30"/>
                                         <state key="normal" title="Login"/>
                                         <connections>
                                             <segue destination="SdI-DS-M33" kind="show" id="iJK-SG-xZL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hTB-ad-qGw">
-                                        <rect key="frame" x="0.0" y="106" width="96" height="30"/>
+                                        <rect key="frame" x="0.0" y="106" width="96.5" height="30"/>
                                         <state key="normal" title="Register"/>
                                         <connections>
                                             <segue destination="BYZ-38-t0r" kind="show" id="gfD-ED-hFb"/>
@@ -269,7 +269,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="Bxs-EV-O8K">
-                                <rect key="frame" x="50" y="244" width="314" height="250.5"/>
+                                <rect key="frame" x="50" y="244" width="314" height="247"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fID-AS-YMp">
                                         <rect key="frame" x="0.0" y="0.0" width="314" height="26"/>
@@ -288,13 +288,13 @@
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="error msg label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e1n-Fl-QTX" userLabel="Error Label">
-                                        <rect key="frame" x="0.0" y="169" width="314" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
+                                        <rect key="frame" x="0.0" y="169" width="314" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HKY-vC-iaw" userLabel="Login Button">
-                                        <rect key="frame" x="0.0" y="214.5" width="314" height="36"/>
+                                        <rect key="frame" x="0.0" y="211" width="314" height="36"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                         <state key="normal" title="Login"/>
                                         <connections>
@@ -316,10 +316,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="Agc-XF-9Py"/>
                     <connections>
-                        <outlet property="emailTextField" destination="k0f-6A-rgZ" id="PzQ-re-g6L"/>
+                        <outlet property="emailField" destination="k0f-6A-rgZ" id="PzQ-re-g6L"/>
                         <outlet property="errorLabel" destination="e1n-Fl-QTX" id="Rqj-UG-tcH"/>
                         <outlet property="loginButton" destination="HKY-vC-iaw" id="UwX-Zm-0m5"/>
-                        <outlet property="passwordTextField" destination="guf-uy-iqQ" id="N3A-ge-dJt"/>
+                        <outlet property="passwordField" destination="guf-uy-iqQ" id="N3A-ge-dJt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gOH-Nm-V5G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
