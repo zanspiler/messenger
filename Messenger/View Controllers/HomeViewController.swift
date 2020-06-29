@@ -21,11 +21,8 @@ class HomeViewController: UIViewController {
     var messages = [Message]()
     var UID: String = ""
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        loadMessages()
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -37,6 +34,15 @@ class HomeViewController: UIViewController {
                 self.UID = user.uid
             }
         }
+        
+        // listen for new messages
+        db.collection("messages").addSnapshotListener { querySnapshot, error in
+            guard (querySnapshot?.documents) != nil else {
+                print("Error fetching documents: \(error!)")
+                return
+            }
+            self.loadMessages()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -45,7 +51,9 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func sendButtonPress(_ sender: Any) {
-                
+        let trimmedMessage = self.messageTextField.text!.trimmingCharacters(in: NSCharacterSet.whitespaces)
+        if trimmedMessage == "" { return }
+        
         var ref: DocumentReference? = nil
         ref = db.collection("messages").addDocument(data: [
             "message": messageTextField.text!,
@@ -63,14 +71,11 @@ class HomeViewController: UIViewController {
         
     }
     
-    
-    // add counter to messages for ordering..
-    
+        
     func loadMessages() {
         self.messages = [Message]()
         
         let collection = db.collection("messages")
-
         collection.order(by: "time").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -84,15 +89,20 @@ class HomeViewController: UIViewController {
     
                 }
             }
-            self.tableView.reloadData()
+            self.updateTableView()
         }
+    }
+    
+    func updateTableView() {
+        self.tableView.reloadData()
+        self.tableView.scrollToRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, at: .bottom, animated: false)
     }
     
 }
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("you tapped me!")
+        // cell tap
     }
 }
 
@@ -107,12 +117,14 @@ extension HomeViewController: UITableViewDataSource {
         cell.textLabel?.text = messages[indexPath.row].message
         cell.textLabel?.numberOfLines = 0
         
+        cell.textLabel?.textAlignment = NSTextAlignment.left
+        cell.contentView.backgroundColor = UIColor.white
+        
+        // user's message
         if messages[indexPath.row].senderUID == self.UID {
             cell.textLabel?.textAlignment = NSTextAlignment.right
-        } else {
-            cell.textLabel?.textAlignment = NSTextAlignment.left
         }
-         
+                
         return cell
     }
 }
