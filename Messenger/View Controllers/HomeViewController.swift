@@ -70,9 +70,8 @@ class HomeViewController: UIViewController {
         self.messages = [Message]()
         
         let collection = db.collection("messages")
-        collection.order(by: "time", descending: false)
-        
-        collection.getDocuments() { (querySnapshot, err) in
+
+        collection.order(by: "time").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             }

@@ -5,5 +5,5 @@ xcuserdata/
 Messenger/GoogleService-Info.plist
 
 Pods/
-Podfile/
+Podfile
 Podfile.lock
