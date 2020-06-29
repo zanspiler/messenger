@@ -1,0 +1,9 @@
+.DS_Store
+
+xcuserdata/
+*.xcworkspace/
+Messenger/GoogleService-Info.plist
+
+Pods/
+Podfile/
+Podfile.lock

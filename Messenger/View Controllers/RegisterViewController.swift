@@ -31,18 +31,23 @@ class RegisterViewController: UIViewController {
                 
             if (error == nil) {
                 
-                print("Account created :)")
-                
                 let db = Firestore.firestore()
-                db.collection("users").addDocument(data:
-                    ["email" : self.emailTextField.text!,
-                     "username": self.usernameTextField.text!]) { (error) in
-                        if error != nil {
-                            print("Failed to store user data")
-                        }
+                
+                // Store user in Users collection
+                db.collection("users").document(result!.user.uid).setData([
+                    "username": self.usernameTextField.text!,
+                    "email": self.emailTextField.text!
+                ]) { err in
+                    if let err = err {
+                        print("Error writing document: \(err)")
+                    } else {
+                        print("Document successfully written!")
+                    }
                 }
                 
-                // transition
+                print("User document created!")
+
+                // Transition to Home View
                 let home = self.storyboard?.instantiateViewController(identifier: "home") as? HomeViewController
                 self.view.window?.rootViewController = home
                 self.view.window?.makeKeyAndVisible()

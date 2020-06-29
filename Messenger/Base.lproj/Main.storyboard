@@ -86,24 +86,78 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d9a-V4-fHa">
-                                <rect key="frame" x="100" y="144" width="214" height="618"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="Qee-DN-GyA" userLabel="Input Stack View">
+                                <rect key="frame" x="20" y="742" width="374" height="100"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="m2v-Gd-fIF" userLabel="Message Text Field">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="57"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pUn-mA-zbE" userLabel="Send Button">
+                                        <rect key="frame" x="0.0" y="70" width="374" height="30"/>
+                                        <state key="normal" title="Send"/>
+                                        <connections>
+                                            <action selector="sendButtonPress:" destination="UpY-jX-wFz" eventType="touchUpInside" id="xW1-Fz-F8D"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="kyK-UO-gGJ" userLabel="Output Stack View">
+                                <rect key="frame" x="20" y="174" width="374" height="548"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ynl-zD-kMK">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="548"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <prototypes>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell1" id="cq9-u4-9Q1">
+                                                <rect key="frame" x="0.0" y="28" width="374" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cq9-u4-9Q1" id="oBU-OL-5V5">
+                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="a8f-LL-9t0">
+                                                <rect key="frame" x="0.0" y="72" width="374" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="a8f-LL-9t0" id="wOw-FA-323">
+                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="gNf-SL-evq">
+                                                <rect key="frame" x="0.0" y="116" width="374" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gNf-SL-evq" id="eJv-qE-iRR">
+                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                        </prototypes>
+                                    </tableView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="IsO-iv-ZlW" firstAttribute="bottom" secondItem="d9a-V4-fHa" secondAttribute="bottom" constant="100" id="1oX-2x-5mC"/>
-                            <constraint firstItem="d9a-V4-fHa" firstAttribute="top" secondItem="IsO-iv-ZlW" secondAttribute="top" constant="100" id="bzq-ys-xIn"/>
-                            <constraint firstItem="IsO-iv-ZlW" firstAttribute="trailing" secondItem="d9a-V4-fHa" secondAttribute="trailing" constant="100" id="dbs-UM-e4d"/>
-                            <constraint firstItem="d9a-V4-fHa" firstAttribute="leading" secondItem="IsO-iv-ZlW" secondAttribute="leading" constant="100" id="wRI-cS-r2u"/>
+                            <constraint firstItem="IsO-iv-ZlW" firstAttribute="bottom" secondItem="Qee-DN-GyA" secondAttribute="bottom" constant="20" id="0dB-d5-pln"/>
+                            <constraint firstItem="IsO-iv-ZlW" firstAttribute="trailing" secondItem="kyK-UO-gGJ" secondAttribute="trailing" constant="20" id="6pF-Rn-jXv"/>
+                            <constraint firstItem="Qee-DN-GyA" firstAttribute="top" secondItem="kyK-UO-gGJ" secondAttribute="bottom" constant="20" id="BdI-ws-Z1A"/>
+                            <constraint firstItem="Qee-DN-GyA" firstAttribute="centerX" secondItem="b7N-Nd-W3z" secondAttribute="centerX" id="MQl-Vk-YZa"/>
+                            <constraint firstItem="IsO-iv-ZlW" firstAttribute="trailing" secondItem="Qee-DN-GyA" secondAttribute="trailing" constant="20" id="Rcg-L2-ivf"/>
+                            <constraint firstItem="kyK-UO-gGJ" firstAttribute="centerY" secondItem="b7N-Nd-W3z" secondAttribute="centerY" id="byF-8F-7Ui"/>
+                            <constraint firstItem="Qee-DN-GyA" firstAttribute="leading" secondItem="IsO-iv-ZlW" secondAttribute="leading" constant="20" id="cen-bZ-gfl"/>
+                            <constraint firstItem="Qee-DN-GyA" firstAttribute="top" secondItem="b7N-Nd-W3z" secondAttribute="top" constant="742" id="fG6-9P-wHK"/>
+                            <constraint firstItem="kyK-UO-gGJ" firstAttribute="leading" secondItem="IsO-iv-ZlW" secondAttribute="leading" constant="20" id="omb-8I-HqE"/>
+                            <constraint firstItem="kyK-UO-gGJ" firstAttribute="centerX" secondItem="b7N-Nd-W3z" secondAttribute="centerX" id="t78-vP-y1e"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="IsO-iv-ZlW"/>
                     </view>
                     <connections>
-                        <outlet property="welcomeLabel" destination="d9a-V4-fHa" id="5W9-VG-bYI"/>
+                        <outlet property="messageTextField" destination="m2v-Gd-fIF" id="L2L-aS-mJy"/>
+                        <outlet property="sendButton" destination="pUn-mA-zbE" id="6dE-eQ-OFn"/>
+                        <outlet property="tableView" destination="ynl-zD-kMK" id="HX2-Hv-T4I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Od2-ZY-5AU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

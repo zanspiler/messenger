@@ -24,7 +24,7 @@ class LoginViewController: UIViewController {
     @IBAction func loginButtonPress(_ sender: Any) {
         Auth.auth().signIn(withEmail: emailTextField.text!, password: passwordTextField.text!) { (result, error) in
             if error == nil {
-                //transition
+                // Transition to Home View
                 let home = self.storyboard?.instantiateViewController(identifier: "home") as? HomeViewController
                 self.view.window?.rootViewController = home
                 self.view.window?.makeKeyAndVisible()
