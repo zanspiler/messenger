@@ -41,6 +41,8 @@ class HomeViewController: UIViewController {
             }
         }
         
+        users = [String]()
+        
         db.collection("users").order(by: "username").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -48,7 +50,9 @@ class HomeViewController: UIViewController {
             else {
                 for document in querySnapshot!.documents {
                     let usr = document.data()["username"] as! String
-                    if usr != self.USERNAME { self.users.append(usr) }
+                    if usr != self.USERNAME {
+                        self.users.append(usr)
+                    }
                 }
             }
             self.tableView.reloadData()
@@ -62,13 +66,24 @@ class HomeViewController: UIViewController {
         Auth.auth().removeStateDidChangeListener(handle!)
     }
     
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "HomeToChat" {
+            let destinationViewController = segue.destination as! ChatViewController
+            destinationViewController.friend = sender as? String
+        }
+    }
+    
   
 }
 
 
 extension HomeViewController: UITableViewDelegate {
+    // Tap on username
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // cell tap
+        let friend = users[indexPath.row]
+        // send data to chat view controller
+        performSegue(withIdentifier: "HomeToChat", sender: friend)
     }
 }
 
@@ -87,5 +102,7 @@ extension HomeViewController: UITableViewDataSource {
      
         return cell
     }
+    
+    
 }
 
