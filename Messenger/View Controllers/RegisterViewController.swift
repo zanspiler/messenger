@@ -48,7 +48,7 @@ class RegisterViewController: UIViewController {
                 print("User document created!")
 
                 // Transition to Home View
-                let home = self.storyboard?.instantiateViewController(identifier: "home") as? HomeViewController
+                let home = self.storyboard?.instantiateViewController(identifier: "home") as? ChatViewController
                 self.view.window?.rootViewController = home
                 self.view.window?.makeKeyAndVisible()
                 
