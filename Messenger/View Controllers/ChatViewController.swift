@@ -18,7 +18,7 @@ class ChatViewController: UIViewController {
     
     let db = Firestore.firestore()
     
-    var UID: String = ""
+    var UID: String = ""       
     var USERNAME: String = ""
     var contactName: String?
     var conversationID: String = ""

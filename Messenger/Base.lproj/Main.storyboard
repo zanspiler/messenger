@@ -179,7 +179,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XjS-cW-kjC">
-                                        <rect key="frame" x="0.0" y="46" width="394" height="732"/>
+                                        <rect key="frame" x="0.0" y="46" width="394" height="682"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="BwD-5C-BpG" userLabel="cell">
@@ -192,6 +192,15 @@
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2TA-UK-b4n" userLabel="Log Out Button">
+                                        <rect key="frame" x="0.0" y="748" width="394" height="30"/>
+                                        <state key="normal" title="Log Out">
+                                            <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="logoutButtonPress:" destination="8mR-JM-6yl" eventType="touchUpInside" id="pdV-dW-Pag"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -205,6 +214,7 @@
                         <viewLayoutGuide key="safeArea" id="6Yp-1K-D4e"/>
                     </view>
                     <connections>
+                        <outlet property="logoutButton" destination="2TA-UK-b4n" id="cFA-Fa-eCg"/>
                         <outlet property="tableView" destination="XjS-cW-kjC" id="UPA-Uj-4v7"/>
                         <segue destination="UpY-jX-wFz" kind="show" identifier="HomeToChat" id="Lgw-fe-Xmw"/>
                     </connections>
@@ -216,7 +226,7 @@
         <!--View Controller-->
         <scene sceneID="cdn-vq-wAv">
             <objects>
-                <viewController id="AiH-lY-gEB" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="first" id="AiH-lY-gEB" customClass="ViewController" customModule="Messenger" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Fdw-CL-E68">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -271,7 +281,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="Bxs-EV-O8K">
                                 <rect key="frame" x="50" y="244" width="314" height="247"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fID-AS-YMp">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log In" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fID-AS-YMp">
                                         <rect key="frame" x="0.0" y="0.0" width="314" height="26"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="19"/>
                                         <nil key="textColor"/>
@@ -293,10 +303,10 @@
                                         <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HKY-vC-iaw" userLabel="Login Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HKY-vC-iaw" userLabel="Log In Button">
                                         <rect key="frame" x="0.0" y="211" width="314" height="36"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
-                                        <state key="normal" title="Login"/>
+                                        <state key="normal" title="Log In"/>
                                         <connections>
                                             <action selector="loginButtonPress:" destination="SdI-DS-M33" eventType="touchUpInside" id="2uH-yq-DSJ"/>
                                             <action selector="loginButtonPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tMU-MS-X39"/>

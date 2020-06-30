@@ -16,10 +16,16 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var loginButton: UIButton!
     
+    let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         errorLabel.text = ""
+        
+        spinner.style = UIActivityIndicatorView.Style.medium
+        spinner.center = view.center
+        view.addSubview(spinner)
     }
     
     @IBAction func loginButtonPress(_ sender: Any) {
@@ -32,7 +38,10 @@ class LoginViewController: UIViewController {
             return
         }
         
+        spinner.startAnimating()
+        
         Auth.auth().signIn(withEmail: emailField.text!, password: passwordField.text!) { (result, error) in
+            
             if error == nil {
                 // Transition to Home View
                 let home = self.storyboard?.instantiateViewController(identifier: "home") as? HomeViewController
@@ -42,6 +51,7 @@ class LoginViewController: UIViewController {
             }
             else {
                 self.errorLabel.text = self.errorMessage(with: error!._code)
+                self.spinner.stopAnimating()
             }
         }
         

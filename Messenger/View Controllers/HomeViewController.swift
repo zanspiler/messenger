@@ -12,6 +12,7 @@ import Firebase
 class HomeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var logoutButton: UIButton!
     
     let db = Firestore.firestore()
     
@@ -40,6 +41,18 @@ class HomeViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func logoutButtonPress(_ sender: Any) {
+        do {
+            try Auth.auth().signOut()
+            
+            // Transition to Home View
+              let firstScreen = self.storyboard?.instantiateViewController(identifier: "first") as? ViewController
+              self.view.window?.rootViewController = firstScreen
+              self.view.window?.makeKeyAndVisible()            
+            
+        } catch { print("Error trying to Log Out") }
+    }
 
     // Prepare for transfer of data to Chat VC
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -48,6 +61,7 @@ class HomeViewController: UIViewController {
             destinationViewController.contactName = sender as? String
         }
     }
+    
     
     func loadUsers() {
         users = [String]()
