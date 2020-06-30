@@ -14,18 +14,26 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var logoutButton: UIButton!
     
+    let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
+
+    
     let db = Firestore.firestore()
     
     var UID: String = ""
     var USERNAME: String = ""
     
-    var users = [String]()
+    var users = [User]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        spinner.center = view.center
+        view.addSubview(spinner)
+        
+        self.spinner.startAnimating()
         
         // Load list of all users excluding logged-in user
         let user = Auth.auth().currentUser
@@ -42,16 +50,30 @@ class HomeViewController: UIViewController {
         }
     }
     
+
     @IBAction func logoutButtonPress(_ sender: Any) {
-        do {
-            try Auth.auth().signOut()
-            
+        
+            // Log out user and change user's status
+            let user = Auth.auth().currentUser
+            if let user = user {
+                Firestore.firestore().collection("users").document(user.uid).updateData([
+                    "active": false
+                ]) { err in
+                    if err != nil {
+                        print("Error updating user status")
+                    } else {
+                        print("User status updated")
+                        do {
+                            try Auth.auth().signOut()
+                        } catch { print("Error trying to Log Out") }
+                    }
+                }
+            }
+
             // Transition to Home View
               let firstScreen = self.storyboard?.instantiateViewController(identifier: "first") as? ViewController
               self.view.window?.rootViewController = firstScreen
-              self.view.window?.makeKeyAndVisible()            
-            
-        } catch { print("Error trying to Log Out") }
+              self.view.window?.makeKeyAndVisible()                        
     }
 
     // Prepare for transfer of data to Chat VC
@@ -64,7 +86,7 @@ class HomeViewController: UIViewController {
     
     
     func loadUsers() {
-        users = [String]()
+        users = [User]()
         
         db.collection("users").order(by: "username").getDocuments() { (querySnapshot, err) in
             if let err = err {
@@ -72,12 +94,17 @@ class HomeViewController: UIViewController {
             }
             else {
                 for document in querySnapshot!.documents {
-                    let usr = document.data()["username"] as! String
-                    if usr != self.USERNAME {
-                        self.users.append(usr)
+                    let userID = document.documentID
+                    let user = document.data()
+                    let name = user["username"] as! String
+                    let active = (user["active"] as? Int == 1 ? true : false)
+            
+                    if name != self.USERNAME {
+                        self.users.append(User(UID: userID, username: name, active: active))
                     }
                 }
             }
+            self.spinner.stopAnimating()
             self.tableView.reloadData()
         }
     }
@@ -103,9 +130,9 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) // for reusability
-        cell.textLabel?.text = users[indexPath.row]
+        cell.textLabel?.text = users[indexPath.row].username 
         
-        cell.textLabel?.textAlignment = NSTextAlignment.center
+        cell.textLabel?.textAlignment = NSTextAlignment.left
         cell.contentView.backgroundColor = UIColor.white
         
         return cell

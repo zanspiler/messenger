@@ -20,6 +20,9 @@
 		3704FDF424A92A20005D8020 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3704FDF324A92A20005D8020 /* Message.swift */; };
 		3704FDF624AA00FC005D8020 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3704FDF524AA00FC005D8020 /* HomeViewController.swift */; };
 		3765A37724A5000800F5ACC4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3765A37624A5000800F5ACC4 /* GoogleService-Info.plist */; };
+		37B83F9424AB6EB500E4792D /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B83F9324AB6EB500E4792D /* Utilities.swift */; };
+		37B83F9624AB702E00E4792D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B83F9524AB702E00E4792D /* Constants.swift */; };
+		37B83F9824AB977000E4792D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B83F9724AB977000E4792D /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +40,9 @@
 		3704FDF324A92A20005D8020 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		3704FDF524AA00FC005D8020 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		3765A37624A5000800F5ACC4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		37B83F9324AB6EB500E4792D /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		37B83F9524AB702E00E4792D /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		37B83F9724AB977000E4792D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		62C965B30402280AB0E7EF64 /* Pods-Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messenger.release.xcconfig"; path = "Target Support Files/Pods-Messenger/Pods-Messenger.release.xcconfig"; sourceTree = "<group>"; };
 		C0890F84D0A1B13AB048DCFF /* Pods_Messenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB72A307E184BA88752BBAC9 /* Pods-Messenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messenger.debug.xcconfig"; path = "Target Support Files/Pods-Messenger/Pods-Messenger.debug.xcconfig"; sourceTree = "<group>"; };
@@ -78,12 +84,15 @@
 				3704FDEC24A5EAC7005D8020 /* View Controllers */,
 				3703AB0624A4EED400DBEA7B /* AppDelegate.swift */,
 				3703AB0824A4EED400DBEA7B /* SceneDelegate.swift */,
+				37B83F9724AB977000E4792D /* User.swift */,
+				3704FDF324A92A20005D8020 /* Message.swift */,
+				37B83F9324AB6EB500E4792D /* Utilities.swift */,
+				37B83F9524AB702E00E4792D /* Constants.swift */,
 				3703AB0C24A4EED400DBEA7B /* Main.storyboard */,
 				3703AB0F24A4EED400DBEA7B /* Assets.xcassets */,
 				3703AB1124A4EED400DBEA7B /* LaunchScreen.storyboard */,
 				3703AB1424A4EED400DBEA7B /* Info.plist */,
 				3765A37624A5000800F5ACC4 /* GoogleService-Info.plist */,
-				3704FDF324A92A20005D8020 /* Message.swift */,
 			);
 			path = Messenger;
 			sourceTree = "<group>";
@@ -238,9 +247,12 @@
 				3704FDF024A5ED30005D8020 /* RegisterViewController.swift in Sources */,
 				3704FDF624AA00FC005D8020 /* HomeViewController.swift in Sources */,
 				3703AB0724A4EED400DBEA7B /* AppDelegate.swift in Sources */,
+				37B83F9624AB702E00E4792D /* Constants.swift in Sources */,
 				3703AB0924A4EED400DBEA7B /* SceneDelegate.swift in Sources */,
+				37B83F9424AB6EB500E4792D /* Utilities.swift in Sources */,
 				3704FDEE24A5ED27005D8020 /* ChatViewController.swift in Sources */,
 				3704FDF424A92A20005D8020 /* Message.swift in Sources */,
+				37B83F9824AB977000E4792D /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

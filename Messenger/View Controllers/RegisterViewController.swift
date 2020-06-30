@@ -71,11 +71,11 @@ class RegisterViewController: UIViewController {
             completion: { (result, error) -> Void in
                 
                 if (error == nil) {
-                    
                     // Save user in Users collection
                     self.db.collection("users").document(result!.user.uid).setData([
                         "username": self.usernameField.text!,
-                        "email": self.emailField.text!
+                        "email": self.emailField.text!,
+                        "active": true
                     ]) { err in
                         if let err = err {
                             print("Error writing document: \(err)")
@@ -84,6 +84,8 @@ class RegisterViewController: UIViewController {
                         }
                     }
                     
+                    Utilities.setUserStatus(to: Constants.USER_STATUS_ACTIVE)
+
                     // Transition to Home View
                     let home = self.storyboard?.instantiateViewController(identifier: "home") as? HomeViewController
                     self.view.window?.rootViewController = home

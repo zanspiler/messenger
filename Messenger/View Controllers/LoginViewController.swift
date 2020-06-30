@@ -41,8 +41,9 @@ class LoginViewController: UIViewController {
         spinner.startAnimating()
         
         Auth.auth().signIn(withEmail: emailField.text!, password: passwordField.text!) { (result, error) in
-            
             if error == nil {
+                Utilities.setUserStatus(to: Constants.USER_STATUS_ACTIVE)
+
                 // Transition to Home View
                 let home = self.storyboard?.instantiateViewController(identifier: "home") as? HomeViewController
                 self.view.window?.rootViewController = home

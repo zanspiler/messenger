@@ -16,6 +16,8 @@ class ChatViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var contactNameLabel: UILabel!
     
+    let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
+    
     let db = Firestore.firestore()
     
     var UID: String = ""       
@@ -43,6 +45,9 @@ class ChatViewController: UIViewController {
             }
         }
         
+        spinner.center = view.center
+        view.addSubview(spinner)
+    
         tableView.delegate = self
         tableView.dataSource = self
     }
@@ -86,6 +91,8 @@ class ChatViewController: UIViewController {
     
     
     func loadMessages() {
+        self.spinner.startAnimating()
+
         self.messages = [Message]()
     
         db.collection("conversations").document(conversationID).collection("messages").order(by: "time").getDocuments() { (querySnapshot, err) in
@@ -102,6 +109,7 @@ class ChatViewController: UIViewController {
             self.updateTableView()
         }
         
+        self.spinner.stopAnimating()
     }
     
     func updateTableView() {
