@@ -15,6 +15,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
     
     let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
     
@@ -56,6 +57,10 @@ class LoginViewController: UIViewController {
             }
         }
         
+    }
+    
+    @IBAction func backButtonPress(_ sender: Any) {
+        _ = navigationController?.popViewController(animated: true)
     }
 
     func errorMessage(with code: Int) -> String {

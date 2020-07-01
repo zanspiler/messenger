@@ -13,6 +13,7 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var logoutButton: UIButton!
+    @IBOutlet weak var addContactButton: UIButton!
     
     let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
     
@@ -39,46 +40,39 @@ class HomeViewController: UIViewController {
         view.addSubview(spinner)
         
         self.spinner.startAnimating()
-        
-        // Load list of all users excluding logged-in user
-        let user = Auth.auth().currentUser
-        if let user = user {
-            self.UID = user.uid
-            self.db.collection("users").document(self.UID).getDocument { (document, error) in
-                if let document = document, document.exists {
-                    self.USERNAME = document.data()!["username"] as! String
-                    self.loadUsers()
-                } else {
-                    print("Document does not exist")
-                }
-            }
-        }
+        loadContacts()
     }
     
-    
-    @IBAction func logoutButtonPress(_ sender: Any) {
+    @IBAction func logOutButtonPress(_ sender: Any) {
         
-        // Log out user and change user's status
-        let user = Auth.auth().currentUser
-        if let user = user {
-            Firestore.firestore().collection("users").document(user.uid).updateData([
-                "active": false
-            ]) { err in
-                if err != nil {
-                    print("Error updating user status")
-                } else {
-                    print("User status updated")
-                    do {
-                        try Auth.auth().signOut()
-                    } catch { print("Error trying to Log Out") }
+//          Log out user and change user's status
+                let user = Auth.auth().currentUser
+                if let user = user {
+                    Firestore.firestore().collection("users").document(user.uid).updateData([
+                        "active": false
+                    ]) { err in
+                        if err != nil {
+                            print("Error updating user status")
+                        } else {
+                            print("User status updated")
+                            do {
+                                try Auth.auth().signOut()
+                            } catch { print("Error trying to Log Out") }
+                        }
+                    }
                 }
-            }
-        }
         
-        // Transition to Login/Register View
-        let firstScreen = self.storyboard?.instantiateViewController(identifier: "first") as? ViewController
-        self.view.window?.rootViewController = firstScreen
-        self.view.window?.makeKeyAndVisible()
+                // Transition to Login/Register View
+                let firstScreen = self.storyboard?.instantiateViewController(identifier: "first") as? ViewController
+                self.view.window?.rootViewController = firstScreen
+                self.view.window?.makeKeyAndVisible()
+    }
+    
+
+    
+    @IBAction func addContactButtonPress(_ sender: Any) {
+        // Send data to Chat VC
+        performSegue(withIdentifier: "HomeToAddContact", sender: users)
     }
     
     // Prepare for transfer of data to Chat VC
@@ -87,30 +81,50 @@ class HomeViewController: UIViewController {
             let destinationViewController = segue.destination as! ChatViewController
             destinationViewController.contactUsername = sender as? String
         }
+            
+        else if segue.identifier == "HomeToAddContact" {
+            let destinationViewController = segue.destination as! AddContactViewController
+            destinationViewController.contacts = sender as! [User]
+        }
     }
     
     
-    func loadUsers() {
-        users = [User]()
+    func loadContacts() {
+        let user = Auth.auth().currentUser
+        if let user = user {
+            self.UID = user.uid
+            self.db.collection("users").document(self.UID).getDocument { (document, error) in
+                if let document = document, document.exists {
+                    self.USERNAME = document.data()!["username"] as! String
+
+                    self.users = [User]()
+                    let docRefs = document.data()!["contacts"] as? [DocumentReference] ?? []
         
-        db.collection("users").order(by: "username").getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            }
-            else {
-                for document in querySnapshot!.documents {
-                    let userID = document.documentID
-                    let user = document.data()
-                    let name = user["username"] as! String
-                    let active = (user["active"] as? Int == 1 ? true : false)
-                    
-                    if name != self.USERNAME {
-                        self.users.append(User(UID: userID, username: name, active: active))
+                    for docRef in docRefs {
+                        docRef.getDocument { (document, error) in
+                            if let document = document, document.exists {
+                                let userID = document.documentID
+                                let user = document.data()
+                                let name = user?["username"] as! String
+                                let active = (user?["active"] as? Int == 1 ? true : false)
+                                                                
+                                if name != self.USERNAME {
+                                    self.users.append(User(UID: userID, username: name, active: active))
+                                    self.tableView.reloadData()
+                                }
+                                
+                            } else {
+                                print("Document does not exist")
+                            }
+                        }
+                        
                     }
+                self.spinner.stopAnimating()
+                }
+                else {
+                    print("Document does not exist")
                 }
             }
-            self.spinner.stopAnimating()
-            self.tableView.reloadData()
         }
     }
     
@@ -124,10 +138,6 @@ extension HomeViewController: UITableViewDelegate {
         let user = users[indexPath.row].username
         // Send data to Chat VC
         performSegue(withIdentifier: "HomeToChat", sender: user)
-        
-//        navigationController?.pushViewController(MessagingViewController(), animated: true)
-        
-        
     }
 }
 
@@ -145,19 +155,9 @@ extension HomeViewController: UITableViewDataSource {
         cell.contentView.backgroundColor = UIColor.white
         
         cell.statusImageView.layer.borderWidth = 0
-        //cell.statusImageView.layer.masksToBounds = false
         cell.statusImageView.layer.cornerRadius = cell.statusImageView.frame.height/2
-
+        
         return cell
-        
-        //        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        //        cell.textLabel?.text = users[indexPath.row].username
-        //
-        //        cell.textLabel?.textAlignment = NSTextAlignment.left
-        //        cell.contentView.backgroundColor = UIColor.white
-        //
-        //        return cell
-        
     }
     
 }

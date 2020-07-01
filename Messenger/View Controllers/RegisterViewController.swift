@@ -16,6 +16,9 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var registerButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
+    
+    
     let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
     
     let db = Firestore.firestore()
@@ -62,6 +65,10 @@ class RegisterViewController: UIViewController {
                 }
         }
          
+    }
+    
+    @IBAction func backButtonPress(_ sender: Any) {
+        _ = navigationController?.popViewController(animated: true)
     }
     
     func registerUser() {
