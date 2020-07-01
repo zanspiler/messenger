@@ -97,9 +97,6 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pUn-mA-zbE" userLabel="Send Button">
                                         <rect key="frame" x="353.5" y="0.0" width="20.5" height="46"/>
                                         <state key="normal" image="paperplane" catalog="system"/>
-                                        <connections>
-                                            <action selector="sendButtonPress:" destination="UpY-jX-wFz" eventType="touchUpInside" id="xW1-Fz-F8D"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -152,9 +149,6 @@
                     <navigationItem key="navigationItem" id="uJ4-0R-fzj"/>
                     <connections>
                         <outlet property="contactNameLabel" destination="m2D-sa-YDV" id="Uig-2Q-KkA"/>
-                        <outlet property="messageField" destination="m2v-Gd-fIF" id="L2L-aS-mJy"/>
-                        <outlet property="sendButton" destination="pUn-mA-zbE" id="6dE-eQ-OFn"/>
-                        <outlet property="tableView" destination="ynl-zD-kMK" id="HX2-Hv-T4I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Od2-ZY-5AU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -178,7 +172,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XjS-cW-kjC">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XjS-cW-kjC">
                                         <rect key="frame" x="0.0" y="46" width="334" height="682"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <prototypes>

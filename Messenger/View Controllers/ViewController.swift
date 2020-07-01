@@ -13,6 +13,20 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        let db = Firestore.firestore()
+//
+//        db.collection("users").order(by: "username").getDocuments() { (querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//            }
+//            else {
+//                for document in querySnapshot!.documents {
+//                    print(document.data())
+//                }
+//            }
+//        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
