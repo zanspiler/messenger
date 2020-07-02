@@ -12,12 +12,17 @@ class User {
     
     var UID: String
     var username: String
-    var active: Bool
+    var active: Bool?
     
     init(UID: String, username: String, active: Bool) {
         self.UID = UID
         self.username = username
         self.active = active
+    }
+    
+    init(_ UID: String, _ username: String) {
+        self.UID = UID
+        self.username = username
     }
     
 }

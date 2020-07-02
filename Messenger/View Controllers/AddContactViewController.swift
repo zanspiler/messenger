@@ -9,17 +9,19 @@
 import UIKit
 import Firebase
 
-class AddContactViewController: UIViewController, UISearchBarDelegate {
+class AddContactViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var feedbackLabel: UILabel!
     
     var users = [User]()
     var contacts = [User]() 
     var contactsNames = Set<String>()
-
+    
     
     var UID = ""
+    var USERNAME = ""
     
     let db = Firestore.firestore()
     
@@ -29,26 +31,32 @@ class AddContactViewController: UIViewController, UISearchBarDelegate {
         searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
-        
-        // Custom Cell
-        let nib = UINib(nibName: "UserTableViewCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: "UserTableViewCell")
-        
+
         searchBar.searchTextField.autocorrectionType = .no
         searchBar.searchTextField.autocapitalizationType = .none
         searchBar.searchTextField.spellCheckingType = .no
-
+        
+        feedbackLabel.text = ""
         
         let user = Auth.auth().currentUser
         if let user = user {
             self.UID = user.uid
+            self.db.collection("users").document(self.UID).getDocument { (document, error) in
+                    if let document = document, document.exists {
+                        self.USERNAME = document.data()!["username"] as! String
+                    }
+                    else {
+                        print("Document does not exist")
+                    }
+            }
+            
         }
         
         for user in contacts {
             contactsNames.insert(user.username)
         }
     }
-        
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         db.collection("users").order(by: "username").getDocuments() { (querySnapshot, err) in
@@ -57,7 +65,7 @@ class AddContactViewController: UIViewController, UISearchBarDelegate {
             }
             else {
                 self.users = [User]()
-
+                
                 for document in querySnapshot!.documents {
                     let userID = document.documentID
                     let user = document.data()
@@ -76,22 +84,54 @@ class AddContactViewController: UIViewController, UISearchBarDelegate {
         
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+
+    func sendRequestAction(at indexPath: IndexPath) -> UIContextualAction {
+        let user = users[indexPath.row]
+        
+        let action = UIContextualAction(style: .normal, title: "sendRequest") {(action, view, completion) in
+
+            let ref = self.db.collection("users").document(user.UID)
+
+            ref.updateData([
+                "requests": FieldValue.arrayUnion([[ "UID": self.UID, "username": self.USERNAME ]])
+            ])
+            
+            self.feedbackLabel.text = "Request sent!"
+            Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
+                self.feedbackLabel.text = ""
+            }
+            
+        }
+        action.image = UIImage(systemName: "plus.circle")
+        action.backgroundColor = UIColor.systemGreen
+        
+        return action
+    }
+    
+    // TODO: View Profile
+    func viewProfileAction(at indexPath: IndexPath) -> UIContextualAction {
+//        let user = users[indexPath.row]
+        let action = UIContextualAction(style: .normal, title: "viewProfile") {(action, view, completion) in
+            print("TODO: view profile..")
+            completion(true)
+        }
+        action.image = UIImage(systemName: "person.crop.circle")
+        action.backgroundColor = UIColor.systemGray
+
+        return action
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let sendRequest = sendRequestAction(at: indexPath)
+        let viewProfile = viewProfileAction(at: indexPath)
+
+        return UISwipeActionsConfiguration(actions: [sendRequest, viewProfile])
     }
     
     
-
 }
 
-extension AddContactViewController: UITableViewDelegate {
-    // Tap on user's name
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = users[indexPath.row].username
-        // Send data to Chat VC
-        performSegue(withIdentifier: "HomeToChat", sender: user)
-    }
-}
 
 extension AddContactViewController: UITableViewDataSource {
     
@@ -100,17 +140,10 @@ extension AddContactViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "UserTableViewCell", for: indexPath) as! UserTableViewCell
-        
-        cell.label?.text = users[indexPath.row].username
-        cell.label?.textAlignment = NSTextAlignment.left
-        cell.statusImageView.backgroundColor = (users[indexPath.row].active ? UIColor.green : UIColor.red)
-        cell.contentView.backgroundColor = UIColor.white
-        
-        cell.statusImageView.layer.borderWidth = 0
-        cell.statusImageView.layer.cornerRadius = cell.statusImageView.frame.height/2
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = users[indexPath.row].username
         return cell
     }
-    
 }
+
+

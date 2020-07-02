@@ -32,7 +32,6 @@ class HomeViewController: UIViewController {
         let nib = UINib(nibName: "UserTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "UserTableViewCell")
         
-        
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -45,27 +44,27 @@ class HomeViewController: UIViewController {
     
     @IBAction func logOutButtonPress(_ sender: Any) {
         
-//          Log out user and change user's status
-                let user = Auth.auth().currentUser
-                if let user = user {
-                    Firestore.firestore().collection("users").document(user.uid).updateData([
-                        "active": false
-                    ]) { err in
-                        if err != nil {
-                            print("Error updating user status")
-                        } else {
-                            print("User status updated")
-                            do {
-                                try Auth.auth().signOut()
-                            } catch { print("Error trying to Log Out") }
-                        }
-                    }
+//        Log out user and change user's status
+        let user = Auth.auth().currentUser
+        if let user = user {
+            Firestore.firestore().collection("users").document(user.uid).updateData([
+                "active": false
+            ]) { err in
+                if err != nil {
+                    print("Error updating user status")
+                } else {
+                    print("User status updated")
+                    do {
+                        try Auth.auth().signOut()
+                    } catch { print("Error trying to Log Out") }
                 }
-        
-                // Transition to Login/Register View
-                let firstScreen = self.storyboard?.instantiateViewController(identifier: "first") as? ViewController
-                self.view.window?.rootViewController = firstScreen
-                self.view.window?.makeKeyAndVisible()
+            }
+        }
+
+        // Transition to Login/Register View
+        let firstScreen = self.storyboard?.instantiateViewController(identifier: "first") as? ViewController
+        self.view.window?.rootViewController = firstScreen
+        self.view.window?.makeKeyAndVisible()
     }
     
 
@@ -74,6 +73,7 @@ class HomeViewController: UIViewController {
         // Send data to Chat VC
         performSegue(withIdentifier: "HomeToAddContact", sender: users)
     }
+    
     
     // Prepare for transfer of data to Chat VC
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -151,7 +151,7 @@ extension HomeViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "UserTableViewCell", for: indexPath) as! UserTableViewCell
         cell.label?.text = users[indexPath.row].username
         cell.label?.textAlignment = NSTextAlignment.left
-        cell.statusImageView.backgroundColor = (users[indexPath.row].active ? UIColor.green : UIColor.red)
+        cell.statusImageView.backgroundColor = (users[indexPath.row].active ?? false ? UIColor.green : UIColor.red)
         cell.contentView.backgroundColor = UIColor.white
         
         cell.statusImageView.layer.borderWidth = 0
