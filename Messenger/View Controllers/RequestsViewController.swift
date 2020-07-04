@@ -35,6 +35,13 @@ class RequestsViewController: UIViewController, UITableViewDelegate {
         
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+            
+        let homeVC = (self.view.window!.rootViewController! as! HomeViewController)
+        homeVC.loadContacts()
+    }
+    
     func loadRequests() {
         self.db.collection("users").document(self.UID).getDocument { (document, error) in
             if let document = document, document.exists {
@@ -61,14 +68,22 @@ class RequestsViewController: UIViewController, UITableViewDelegate {
         
         let action = UIContextualAction(style: .normal, title: "acceptRequest") {(action, view, completion) in
             
-            let ref = self.db.collection("users").document(self.UID)
-            let newContact = self.db.collection("users").document(request.UID)
+            let loggedInUserRef = self.db.collection("users").document(self.UID)
+            let newContactRef = self.db.collection("users").document(request.UID)
             
-            ref.updateData([
-                "contacts": FieldValue.arrayUnion([newContact]),
+            // Add contact to logged-in user's contacts and remove the request
+            loggedInUserRef.updateData([
+                "contacts": FieldValue.arrayUnion([newContactRef]),
                 "requests": FieldValue.arrayRemove([["username": request.username, "UID": request.UID]])
             ])
             
+            // Add logged-in user to sender's contacts
+            newContactRef.updateData([
+                "contacts": FieldValue.arrayUnion([loggedInUserRef])
+            ])
+            
+            // Set feedback text
+            self.feedbackLabel.textColor = UIColor.systemGreen
             self.feedbackLabel.text = "Request accepted!"
             Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
                 self.feedbackLabel.text = ""
@@ -76,8 +91,6 @@ class RequestsViewController: UIViewController, UITableViewDelegate {
             
             self.requests.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
-            
-            // TODO: send push notification
         }
         
         action.image = UIImage(systemName: "checkmark.rectangle.fill")
@@ -91,22 +104,21 @@ class RequestsViewController: UIViewController, UITableViewDelegate {
         
         let action = UIContextualAction(style: .normal, title: "rejectRequest") {(action, view, completion) in
             
+            // Remove request
             let ref = self.db.collection("users").document(self.UID)
-            
             ref.updateData([
                 "requests": FieldValue.arrayRemove([["username": request.username, "UID": request.UID]])
             ])
             
-            self.feedbackLabel.text = "Request accepted!"
+            // Set feedback text
+            self.feedbackLabel.textColor = UIColor.systemRed
+            self.feedbackLabel.text = "Request rejected!"
             Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
                 self.feedbackLabel.text = ""
             }
-            
-            // TODO: send push notification
-            
+                        
             self.requests.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
-            
         }
         action.image = UIImage(systemName: "clear.fill")
         action.backgroundColor = UIColor.systemRed

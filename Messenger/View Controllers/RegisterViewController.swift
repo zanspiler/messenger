@@ -8,8 +8,9 @@
 
 import UIKit
 import Firebase
+import FirebaseStorage
 
-class RegisterViewController: UIViewController {
+class RegisterViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var usernameField: UITextField!
@@ -17,6 +18,7 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var profilePicture: UIImageView!
     
     
     let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
@@ -29,9 +31,40 @@ class RegisterViewController: UIViewController {
 
         errorLabel.text = ""
         
+        profilePicture.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onProfilePictureSelect)))
+        profilePicture.isUserInteractionEnabled = true
+//        profilePicture.contentMode = .scaleAspectFill
+//        profilePicture.translatesAutoresizingMaskIntoConstraints = false
+//
         spinner.center = view.center
         view.addSubview(spinner)
     }
+    
+    @objc func onProfilePictureSelect() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        present(picker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        var selectedImage: UIImage?
+        
+        if let edited = info[UIImagePickerController.InfoKey(rawValue: "UIImagePickerControllerEditedImage")] {
+            selectedImage = edited as? UIImage
+        }
+        else if let image = info[UIImagePickerController.InfoKey(rawValue: "UIImagePickerControllerOriginalImage")] {
+            selectedImage = image as? UIImage
+        }
+        
+        if selectedImage != nil {
+            profilePicture.image = selectedImage
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
+
     
     @IBAction func registerButtonPress(_ sender: Any) {
         
@@ -67,9 +100,11 @@ class RegisterViewController: UIViewController {
          
     }
     
+    
     @IBAction func backButtonPress(_ sender: Any) {
         _ = navigationController?.popViewController(animated: true)
     }
+    
     
     func registerUser() {
         Auth.auth().createUser(
@@ -78,32 +113,58 @@ class RegisterViewController: UIViewController {
             completion: { (result, error) -> Void in
                 
                 if (error == nil) {
-                    // Save user in Users collection
-                    self.db.collection("users").document(result!.user.uid).setData([
-                        "username": self.usernameField.text!,
-                        "email": self.emailField.text!,
-                        "active": true
-                    ]) { err in
-                        if let err = err {
-                            print("Error writing document: \(err)")
-                        } else {
-                            print("Document successfully written!")
+                    // Upload profile picture
+                    let storageRef = Storage.storage().reference().child("profilePictures/\(result!.user.uid).png")
+                    
+                    if let uploadData = self.profilePicture.image!.pngData() {
+                        storageRef.putData(uploadData, metadata: nil) { (metadata, errir) in
+                            if error != nil {
+                                print(error!)
+                                return
+                            }
+                            // Get profile picture URL and save new User in database
+                            storageRef.downloadURL { (url, error) in
+                                if url == nil {
+                                    print(error!)
+                                    return
+                                }
+                                self.saveUser(withUID: result!.user.uid, withPictureURL: url!.absoluteString)
+                            }
                         }
                     }
-                    
-                    Utilities.setUserStatus(to: Constants.USER_STATUS_ACTIVE)
-
-                    // Transition to Home View
-                    let home = self.storyboard?.instantiateViewController(identifier: "home") as? HomeViewController
-                    self.view.window?.rootViewController = home
-                    self.view.window?.makeKeyAndVisible()
                 }
+                    
                 else {
                     self.errorLabel.text = self.errorMessage(with: error!._code)
                     self.spinner.stopAnimating()
                 }
         })
     }
+        
+    // Saves new user to user collection and transitions to HomeVC
+    func saveUser(withUID UID: String, withPictureURL URL: String) {
+        self.db.collection("users").document(UID).setData([
+            "username": self.usernameField.text!,
+            "email": self.emailField.text!,
+            "active": true,
+            "contacts": [],
+            "requests": []
+        ]) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            } else {
+                print("Document successfully written!")
+                
+                Utilities.setUserStatus(to: Constants.USER_STATUS_ACTIVE)
+                
+                // Transition to Home View
+                let home = self.storyboard?.instantiateViewController(identifier: "home") as? HomeViewController
+                self.view.window?.rootViewController = home
+                self.view.window?.makeKeyAndVisible()
+            }
+        }
+    }
+
     
     func validateUsername() -> Bool {
         if usernameField.text!.containsWhiteSpace() {
@@ -119,6 +180,7 @@ class RegisterViewController: UIViewController {
         return true
     }
     
+    
     func errorMessage(with code: Int) -> String {
         switch code {
         case 17008: return "Please enter valid email address"
@@ -132,10 +194,10 @@ class RegisterViewController: UIViewController {
     
 }
 
+
 extension String {
     func containsWhiteSpace() -> Bool {
         let range = self.rangeOfCharacter(from: .whitespacesAndNewlines)
-        
         if let _ = range {
             return true
         } else {

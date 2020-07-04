@@ -8,12 +8,14 @@
 
 import UIKit
 import Firebase
+import FirebaseStorage
 import MessageKit
 import InputBarAccessoryView
 
 
 struct Sender: SenderType {
     var senderId: String
+    var UID: String
     var displayName: String
 }
 
@@ -23,18 +25,28 @@ class ChatViewController: MessagesViewController, MessagesDataSource, MessagesDi
     let db = Firestore.firestore()
     
     var loggedInUser: Sender?
-    var loggedInUID: String = ""
-    var loggedInUsername: String = ""
-    var contact: Sender?
-    var contactUsername: String?
-    var conversationID: String = ""
+    var loggedInUID = ""
+    var loggedInUsername = ""
+    var loggedInProfilePicture: UIImage?
+
+    var contact: User?
+    var conversationID = ""
     
     var messageId = 42
     var messages = [Message]()
     
     
+    let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
+       
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        spinner.center = view.center
+        messagesCollectionView.addSubview(spinner)
+        spinner.startAnimating()
+        
+        // Get logged in user's data and load conversation
         
         let user = Auth.auth().currentUser
         if let user = user {
@@ -42,27 +54,33 @@ class ChatViewController: MessagesViewController, MessagesDataSource, MessagesDi
             self.db.collection("users").document(self.loggedInUID).getDocument { (document, error) in
                 if let document = document, document.exists {
                     self.loggedInUsername = document.data()!["username"] as! String
-                    self.loggedInUser = Sender(senderId: self.loggedInUsername, displayName: self.loggedInUsername)
-                    self.contact = Sender(senderId: self.contactUsername!, displayName: self.contactUsername!)
-                    self.setConversationID()
-                    self.loadMessages()
+                    self.loggedInUser = Sender(senderId: self.loggedInUID, UID: self.loggedInUID, displayName: self.loggedInUsername)
+                
+                    let storageRef = Storage.storage().reference().child("profilePictures/\(self.loggedInUID).png")
+                    storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+                        if error == nil {
+                            if let image = UIImage(data: data!) {
+                                self.loggedInProfilePicture = image
+                            }
+                            self.setConversationID()
+                            self.loadMessages()
+                        }
+                        else {
+                            print(error!)
+                        }
+                    }
+                    
                 } else {
                     print("Document does not exist")
                 }
             }
         }
         
-        // Hide avatar
-        if let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout {
-          layout.textMessageSizeCalculator.outgoingAvatarSize = .zero
-          layout.textMessageSizeCalculator.incomingAvatarSize = .zero
-        }
         
         messageInputBar.delegate = self
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,6 +94,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource, MessagesDi
             self.loadMessages()
         }
     }
+
     
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         let trimmedText = text.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
@@ -114,31 +133,45 @@ class ChatViewController: MessagesViewController, MessagesDataSource, MessagesDi
                 for document in querySnapshot!.documents {
                     let messageText = document.data()["message"]! as! String
                     let senderName = document.data()["senderUsername"]! as! String
+                    let senderUID = document.data()["senderUID"]! as! String
+
                     let date: Date = (document.data()["time"] as! Timestamp).dateValue()
                     
-                    self.messages.append(Message(sender: Sender(senderId: senderName, displayName: senderName),
+                    self.messages.append(Message(sender: Sender(senderId: senderUID, UID: senderUID, displayName: senderName),
                                                  messageId: document.documentID,
                                                  sentDate: date,
-                                                 kind: .text(messageText)))
+                                                 kind: .text(messageText)
+                                                 ))
                 }
             }
             self.messagesCollectionView.reloadData()
+            self.spinner.stopAnimating()
         }
+
     }
+    
+    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        let image = (message.sender.senderId == loggedInUID ? loggedInProfilePicture : contact?.profilePicture!)
+        avatarView.set(avatar: Avatar(image: image, initials: message.sender.senderId))
+    }
+    
     
     func setConversationID() {
-        if loggedInUsername < contactUsername! {
-            conversationID = loggedInUsername + "-" + contactUsername!
+        if loggedInUsername < contact!.username {
+            conversationID = loggedInUsername + "-" + contact!.username
         } else {
-            conversationID = contactUsername! + "-" + loggedInUsername
+            conversationID = contact!.username + "-" + loggedInUsername
         }
     }
     
+    
+    
+    // TableView functions
     
     func currentSender() -> SenderType {
         return loggedInUser!
     }
-        
+    
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
         return messages[indexPath.section]
     }
@@ -146,6 +179,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource, MessagesDi
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
         return messages.count
     }
+    
     
     
     // Functions for displaying username

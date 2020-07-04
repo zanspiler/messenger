@@ -9,15 +9,6 @@
 import Foundation
 import MessageKit
 
-//class Message {
-//    var senderUID: String
-//    var message: String
-//
-//    init(_ uid: String, _ message: String) {
-//        self.senderUID = uid
-//        self.message = message
-//    }
-//}
 
 struct Message: MessageType {
     var sender: SenderType

@@ -71,7 +71,7 @@ class AddContactViewController: UIViewController, UISearchBarDelegate, UITableVi
                     let user = document.data()
                     let name = user["username"] as! String
                     let active = (user["active"] as? Int == 1 ? true : false)
-                    
+
                     if userID != self.UID && !self.contactsNames.contains(name) &&
                         name.uppercased().contains(searchText.uppercased())
                     {

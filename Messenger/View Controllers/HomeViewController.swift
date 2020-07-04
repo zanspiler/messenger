@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseStorage
 
 class HomeViewController: UIViewController {
     
@@ -17,11 +18,10 @@ class HomeViewController: UIViewController {
     
     let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
     
-    
     let db = Firestore.firestore()
     
-    var UID: String = ""
-    var USERNAME: String = ""
+    var loggedInUID = ""
+    var loggedInUsername = ""
     
     var users = [User]()
     
@@ -38,13 +38,17 @@ class HomeViewController: UIViewController {
         spinner.center = view.center
         view.addSubview(spinner)
         
-        self.spinner.startAnimating()
-        loadContacts()
     }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        loadContacts()
+        print("loading contacts..")
+    }
+    
     
     @IBAction func logOutButtonPress(_ sender: Any) {
         
-//        Log out user and change user's status
         let user = Auth.auth().currentUser
         if let user = user {
             Firestore.firestore().collection("users").document(user.uid).updateData([
@@ -60,14 +64,13 @@ class HomeViewController: UIViewController {
                 }
             }
         }
-
-        // Transition to Login/Register View
+        
+        // Transition to First View
         let firstScreen = self.storyboard?.instantiateViewController(identifier: "first") as? ViewController
         self.view.window?.rootViewController = firstScreen
         self.view.window?.makeKeyAndVisible()
     }
     
-
     
     @IBAction func addContactButtonPress(_ sender: Any) {
         // Send data to Chat VC
@@ -79,7 +82,7 @@ class HomeViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "HomeToChat" {
             let destinationViewController = segue.destination as! ChatViewController
-            destinationViewController.contactUsername = sender as? String
+            destinationViewController.contact = sender as? User
         }
             
         else if segue.identifier == "HomeToAddContact" {
@@ -90,16 +93,19 @@ class HomeViewController: UIViewController {
     
     
     func loadContacts() {
+        self.spinner.startAnimating()
+        
         let user = Auth.auth().currentUser
         if let user = user {
-            self.UID = user.uid
-            self.db.collection("users").document(self.UID).getDocument { (document, error) in
+            self.loggedInUID = user.uid
+            
+            self.db.collection("users").document(self.loggedInUID).getDocument { (document, error) in
                 if let document = document, document.exists {
-                    self.USERNAME = document.data()!["username"] as! String
-
+                    self.loggedInUsername = document.data()!["username"] as! String
+                    
                     self.users = [User]()
                     let docRefs = document.data()!["contacts"] as? [DocumentReference] ?? []
-        
+                    
                     for docRef in docRefs {
                         docRef.getDocument { (document, error) in
                             if let document = document, document.exists {
@@ -108,22 +114,21 @@ class HomeViewController: UIViewController {
                                 let name = user?["username"] as! String
                                 let active = (user?["active"] as? Int == 1 ? true : false)
                                                                 
-                                if name != self.USERNAME {
+                                if name != self.loggedInUsername {
                                     self.users.append(User(UID: userID, username: name, active: active))
                                     self.tableView.reloadData()
                                 }
                                 
                             } else {
-                                print("Document does not exist")
+                                print("Contact document does not exist")
                             }
                         }
-                        
                     }
-                self.spinner.stopAnimating()
                 }
                 else {
-                    print("Document does not exist")
+                    print("User document does not exist")
                 }
+                self.spinner.stopAnimating()
             }
         }
     }
@@ -135,7 +140,14 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate {
     // Tap on user's name
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = users[indexPath.row].username
+        let user = users[indexPath.row]
+        let cell = tableView.cellForRow(at: indexPath) as? UserTableViewCell
+        if cell!.profileImageView.image == nil {
+            return
+        }
+        
+        user.profilePicture = cell!.profileImageView.image
+        
         // Send data to Chat VC
         performSegue(withIdentifier: "HomeToChat", sender: user)
     }
@@ -148,17 +160,48 @@ extension HomeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "UserTableViewCell", for: indexPath) as! UserTableViewCell
-        cell.label?.text = users[indexPath.row].username
-        cell.label?.textAlignment = NSTextAlignment.left
-        cell.statusImageView.backgroundColor = (users[indexPath.row].active ?? false ? UIColor.green : UIColor.red)
-        cell.contentView.backgroundColor = UIColor.white
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UserTableViewCell", for: indexPath) as! UserTableViewCell
+        
+        let user = users[indexPath.row]
+        
+        cell.label?.text = user.username
+        cell.label?.textAlignment = NSTextAlignment.left
+        
+        cell.statusImageView.backgroundColor = (user.active ?? false ? UIColor.green : UIColor.red)
         cell.statusImageView.layer.borderWidth = 0
         cell.statusImageView.layer.cornerRadius = cell.statusImageView.frame.height/2
-        
+                
+        cell.profileImageView.loadImageUsingCache(with: "profilePictures/\(user.UID).png")
+        cell.profileImageView.contentMode = .scaleAspectFill // ?
+
+        cell.contentView.backgroundColor = UIColor.white
         return cell
     }
     
+}
+
+
+let imageCache = NSCache<AnyObject, AnyObject>()
+
+extension UIImageView {
+    
+    func loadImageUsingCache(with URL: String) {
+        
+        let storageRef = Storage.storage().reference().child(URL)
+        
+        storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+            if error == nil {
+                if let image = UIImage(data: data!) {
+                    imageCache.setObject(image, forKey: URL as NSString)
+                    self.image = image
+                }
+            }
+            else {
+                print(error!)
+            }
+        }
+    }
+        
 }
 

@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import UIKit
 
 class User {
     
     var UID: String
     var username: String
     var active: Bool?
+    var profilePicture: UIImage?
     
     init(UID: String, username: String, active: Bool) {
         self.UID = UID

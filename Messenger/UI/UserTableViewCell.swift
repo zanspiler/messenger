@@ -13,6 +13,7 @@ class UserTableViewCell: UITableViewCell {
     
     @IBOutlet var label: UILabel!
     @IBOutlet var statusImageView: UIImageView!
+    @IBOutlet var profileImageView: UIImageView!
 
     override func awakeFromNib() {
         super.awakeFromNib()

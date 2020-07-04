@@ -12,7 +12,6 @@ import Firebase
 class Utilities {
     
     static func setUserStatus(to status: String) {
-        print("setting status...")
         let user = Auth.auth().currentUser
         if let user = user {
             Firestore.firestore().collection("users").document(user.uid).updateData([
